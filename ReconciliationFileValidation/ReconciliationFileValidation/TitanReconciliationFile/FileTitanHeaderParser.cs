@@ -49,12 +49,36 @@ public static class FileTitanHeaderParser
         var pos = 0;
         var trailerTransactionCode = line.Substring(pos, 1);
         pos += 1;
-        var totalTransactionCount = line.Substring(pos, 10);
+        var trailerCreationDate = line.Substring(pos, 8);
+        pos += 8;
+        var trailerTransactionRecordCount = line.Substring(pos, 10);
         pos += 10;
-        var totalTransactionAmount = line.Substring(pos, 12);
-        pos += 12;
-        var filler = line.Substring(pos, 477);
-        pos += 477;
+        var trailerTransactionAmountSign = line.Substring(pos, 1);
+        pos += 1;
+        var trailerTransactionAmountTotal = line.Substring(pos, 10);
+        pos += 10;
+        var trailerRewardsAmountSign = line.Substring(pos, 1);
+        pos += 1;
+        var trailerRewardsAmountTotal = line.Substring(pos, 10);
+        pos += 10;
+        var trailerManufacturerDiscAmountSign = line.Substring(pos, 1);
+        pos += 1;
+        var trailerManufacturerDiscAmountTotal = line.Substring(pos, 10);
+        pos += 10;
+        var trailerStoreDiscAmountSign = line.Substring(pos, 1);
+        pos += 1;
+        var trailerStoreDiscAmountTotal = line.Substring(pos, 10);
+        pos += 10;
+        var trailerAuthFeeSign = line.Substring(pos, 1);
+        pos += 1;
+        var trailerAuthFeeTotal = line.Substring(pos, 10);
+        pos += 10;
+        var trailerSettlementAmountSign = line.Substring(pos, 1);
+        pos += 1;
+        var trailerFinalSettlementAmountTotal = line.Substring(pos, 10);
+        pos += 10;
+        var filler = line.Substring(pos, 414);
+        pos += 414;
 
         if (pos != line.Length)
         {
@@ -64,15 +88,36 @@ public static class FileTitanHeaderParser
         var sb = new StringBuilder();
 
         sb.AppendLine($"TrailerTransactionCode | {trailerTransactionCode} | {trailerTransactionCode.Length}");
-        sb.AppendLine($"TotalTransactionCount | {long.Parse(totalTransactionCount)} | {totalTransactionCount.Length}");
-
-        //Convert amount with 2 decimals
-        var amount = decimal.Parse(totalTransactionAmount) / 100;
         sb.AppendLine(
-            $"TotalTransactionAmount | {amount.ToString("F2", CultureInfo.InvariantCulture)} | {totalTransactionAmount.Length}");
+                $"FileTrailerCreationDate | {DateTime.ParseExact(trailerCreationDate, "yyyyMMdd", CultureInfo.InvariantCulture):yyyy-MM-dd} | {trailerCreationDate.Length}");
+        sb.AppendLine(
+                $"TransactionRecordCount | {trailerTransactionRecordCount} | {trailerTransactionRecordCount.Length}");
+        sb.AppendLine(
+                $"TransactionAmountSign | {trailerTransactionAmountSign} | {trailerTransactionAmountSign.Length}");
+        sb.AppendLine(
+                $"TransactionAmountTotal | {trailerTransactionAmountSign}{decimal.Parse(trailerTransactionAmountTotal) / 100:F2} | {trailerTransactionAmountTotal.Length}");
+        sb.AppendLine(
+            $"RewardsAmountSign | {trailerRewardsAmountSign} | {trailerRewardsAmountSign.Length}");
+        sb.AppendLine(
+                        $"RewardsAmountTotal | {trailerRewardsAmountSign}{decimal.Parse(trailerRewardsAmountTotal) / 100:F2} | {trailerRewardsAmountTotal.Length}");
+        sb.AppendLine(
+            $"ManufacturerDiscountsAmountSign | {trailerManufacturerDiscAmountSign} | {trailerManufacturerDiscAmountSign.Length}");
+        sb.AppendLine(
+                $"ManufacturerDiscountsAmountTotal | {trailerManufacturerDiscAmountSign}{decimal.Parse(trailerManufacturerDiscAmountTotal) / 100:F2} | {trailerManufacturerDiscAmountTotal.Length}");
+        sb.AppendLine(
+            $"StoreDiscountsAmountSign | {trailerStoreDiscAmountSign} | {trailerStoreDiscAmountSign.Length}");
+        sb.AppendLine(
+                $"StoreDiscountsAmountTotal | {trailerStoreDiscAmountSign}{decimal.Parse(trailerStoreDiscAmountTotal) / 100:F2} | {trailerStoreDiscAmountTotal.Length}");
+        sb.AppendLine(
+            $"AuthorizationFeeSign | {trailerAuthFeeSign} | {trailerAuthFeeSign.Length}");
+        sb.AppendLine(
+                $"AuthorizationFeeTotal | {trailerAuthFeeSign}{decimal.Parse(trailerAuthFeeTotal) / 100:F2} | {trailerAuthFeeTotal.Length}");
+        sb.AppendLine(
+            $"SettlementAmountSign | {trailerSettlementAmountSign} | {trailerSettlementAmountSign.Length}");
 
+        sb.AppendLine(
+                $"FinalSettlementAmountTotal | {trailerSettlementAmountSign}{decimal.Parse(trailerFinalSettlementAmountTotal) / 100:F2} | {trailerFinalSettlementAmountTotal.Length}");
         sb.AppendLine($"Filler | <empty string> | {filler.Length}");
-
         return sb.ToString();
     }
 }

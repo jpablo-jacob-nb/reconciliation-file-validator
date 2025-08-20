@@ -7,10 +7,9 @@ public static class FileTitanTransactionParser
 {
     public static string ToReadableFormat(string line)
     {
-        // TODO: Cuál es la suma? Siempre pensé que eran 500. El ejemplo que me pasó miguel no es así.
-        if (line.Length != 500)
+        if (line.Length != 504)
         {
-            return $"Error: Incorrect length. Waiting: 500, Got: {line.Length}";
+            return $"Error: Incorrect length. Waiting: 504, Got: {line.Length}";
         }
 
         try
@@ -78,7 +77,7 @@ public static class FileTitanTransactionParser
             pos += 100;
             var filler = line.Substring(pos, 68);
 
-            
+
             var sb = new StringBuilder();
             sb.AppendLine($"\tDetailTransactionCode | {detailTransactionCode} | {detailTransactionCode.Length}");
             sb.AppendLine(

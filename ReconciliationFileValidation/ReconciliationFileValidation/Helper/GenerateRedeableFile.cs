@@ -8,8 +8,7 @@ public static class GenerateReadableFile
     {
         try
         {
-            //TODO: Quitar extension
-            var readableFileName = $"{fileName}-readable.txt";
+            var readableFileName = $"{fileName.Replace(".txt", string.Empty)}-readable.txt";
             var outputFilePath = Path.Combine(absoluteFilePath, readableFileName);
 
             Console.WriteLine($"Processing the file: {Path.Combine(absoluteFilePath, fileName)}");
